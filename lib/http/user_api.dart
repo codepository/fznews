@@ -138,7 +138,8 @@ class UserAPI {
           "header": {"token": App.getToken()},
           "body": {
             "method": "exec/leader/add",
-            "params": {"role": role, "userid": userid},
+            // role=6表示是分管领导,role=5表示是部门领导
+            "params": {"role": role ?? 6, "userid": userid},
             "data": [departments]
           }
         }));
@@ -151,6 +152,63 @@ class UserAPI {
         jsonEncode({
           "header": {"token": App.getToken()},
           "body": {"method": "exec/department/sync"}
+        }));
+  }
+
+// ************************** 流程相关 ******************************************
+// 查询未提交XX流程的用户清单（分考核组）
+// personUnApplyByGroup
+  static Future<dynamic> personUnApplyByGroup({int limit, int apply, String titleLike}) {
+    return App.request.post(
+        API.userBase + "/getData",
+        jsonEncode({
+          "body": {
+            "method": "visit/task/personApplyYxkh",
+            "params": {
+              "limit": limit,
+              // 0 表示未提交，1表示已提交
+              "apply": apply,
+              // 流程名称模糊查询
+              "titleLike": titleLike
+            }
+          }
+        }));
+  }
+
+// ************************** 文件上传与下载 ************************************
+// 查询上传文件
+  static Future<dynamic> findUploadfiles({String fields, String filetype, String filename, int limit, int offset}) {
+    // print("findUploadfiles,查询文件");
+    return App.request.post(
+        API.userBase + "/getData",
+        jsonEncode({
+          "body": {
+            "method": "visit/uploadfile/find",
+            "params": {"fields": fields, "filetype": filetype, "filename": filename, "limit": limit, "offset": offset}
+          }
+        }));
+  }
+
+// saveFileToDB 将文件上传至数据库
+  static Future<dynamic> saveFileToDB(String filetype) {
+    return App.request.upload(uri: API.userBase + "/savefiletodb", filetype: filetype, token: App.userinfos.token);
+  }
+
+  // downloadFileFromdb 从数据库下载文件
+  static Future<dynamic> downloadFileFromdb(int id, {String filename}) {
+    return App.request.download(API.userBase + "/downloadfilefromdb?id=$id", filename: filename);
+  }
+
+  // 查询上传文件
+  static Future<dynamic> delUploadfileById(int id) {
+    // print("findUploadfiles,查询文件");
+    return App.request.post(
+        API.userBase + "/getData",
+        jsonEncode({
+          "body": {
+            "method": "exec/uploadfile/delbyid",
+            "params": {"id": id}
+          }
         }));
   }
 }
@@ -181,27 +239,35 @@ class Userinfos {
 
 class User {
   int id;
+  // 对应微信ID
+  String userid;
   String name;
   String departmentname;
   String mobile;
   String email;
   String avatar;
+  String position;
+  User();
   User.fromJson(Map<String, dynamic> json) {
     name = json["name"];
     id = json["id"];
+    userid = json["userid"];
     departmentname = json["departmentname"];
     mobile = json["mobile"];
     email = json["email"];
     avatar = json["avatar"];
+    position = json["position"];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = Map();
     json["name"] = name;
     json["id"] = id;
+    json["userid"] = userid;
     json["departmentname"] = departmentname;
     json["mobile"] = mobile;
     json["email"] = email;
     json["avatar"] = avatar;
+    json["position"] = position;
     return json;
   }
 

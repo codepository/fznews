@@ -29,7 +29,7 @@
         "carousel": {}
     },
     "API": {
-        "yxkh": "http://10.0.2.2:8081/api/v1/yxkh",
+        "yxkh": "http://129.0.97.23:30739/api/v1/yxkh",
         "tongji": "http://129.0.97.23:30739/api/v1/tongji",
         "user":"http://129.0.97.23:30739/api/v1/user"
     },

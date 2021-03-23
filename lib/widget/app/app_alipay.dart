@@ -5,9 +5,8 @@ import 'package:fznews/layout/drawer.dart';
 import 'package:fznews/routes.dart';
 import 'package:fznews/widget/app/app_basic.dart';
 
-
 // AppAlipay 支付宝首页样式,兼容web
-class AppAlipay extends StatefulWidget{
+class AppAlipay extends StatefulWidget {
   final Widget title;
   final List<RouteHandler> tabs;
   final List<RouteHandler> actions;
@@ -17,22 +16,26 @@ class AppAlipay extends StatefulWidget{
   final Widget leading;
   final Widget drawer;
   final params;
-  AppAlipay({Key key,this.title,this.tabs,
-    this.tabController,this.titleWidgets,
-    this.leading,this.actions,
-    this.bottoms,this.drawer,this.params
-    }):super(key:key);
+  AppAlipay(
+      {Key key,
+      this.title,
+      this.tabs,
+      this.tabController,
+      this.titleWidgets,
+      this.leading,
+      this.actions,
+      this.bottoms,
+      this.drawer,
+      this.params})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return _AppAlipayState();
   }
-
-
 }
 
-class _AppAlipayState extends State<AppAlipay> with TickerProviderStateMixin{
-
+class _AppAlipayState extends State<AppAlipay> with TickerProviderStateMixin {
   List<Widget> _titleWidgets;
   Widget _drawer;
   Widget _leading;
@@ -42,35 +45,33 @@ class _AppAlipayState extends State<AppAlipay> with TickerProviderStateMixin{
   TabController _tabController;
   double searchBoxWidth;
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     _tabController.dispose();
   }
 
   @override
-  void initState(){
+  void initState() {
     print('init app_aplipay');
     super.initState();
     // 抽屉
-    _drawer=widget.drawer;
-    if (_drawer==null&&Routes.getNeedsDrawerRegistry().length>0){
-      _drawer=AppDrawer();
+    _drawer = widget.drawer;
+    if (_drawer == null && Routes.getNeedsDrawerRegistry().length > 0) {
+      _drawer = AppDrawer();
     }
     // 标题
     _titleWidgets = widget.titleWidgets;
-    if (_titleWidgets==null){
-        _titleWidgets=List();
-          _titleWidgets.add(
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: (){
-                App.router.navigateTo(context,Routes.Search);
-              },
-            )
-          );
+    if (_titleWidgets == null) {
+      _titleWidgets = List();
+      _titleWidgets.add(IconButton(
+        icon: Icon(Icons.search),
+        onPressed: () {
+          App.router.navigateTo(context, Routes.Search);
+        },
+      ));
     }
     // 右边控件
-    _actions=widget.actions;
+    _actions = widget.actions;
     // if (_actions==null){
     //   _actions = <RouteHandler>[
     //       RouteHandler(title: 'Home', icon: Icons.directions_car,handler: (){return HomePage();}),
@@ -81,7 +82,7 @@ class _AppAlipayState extends State<AppAlipay> with TickerProviderStateMixin{
     //       RouteHandler(title: 'Walk', icon: Icons.directions_walk,handler: (){return ChoiceCard(title: 'Walk', icon: Icons.directions_walk);}),
     //   ];
     // }
-    _tabs=widget.tabs;
+    _tabs = widget.tabs;
     // if (_tabs==null) {
     //  _tabs= <RouteHandler>[
     //       RouteHandler(title: '扫一扫', icon: Icons.scanner,handler: ({Map<String,dynamic> params}){return ChoiceCard(title: 'Car', icon: Icons.directions_car);}),
@@ -90,9 +91,9 @@ class _AppAlipayState extends State<AppAlipay> with TickerProviderStateMixin{
     //       RouteHandler(title: '卡包', icon: Icons.card_giftcard,handler: ({Map<String,dynamic> params}){return ChoiceCard(title: 'Bus', icon: Icons.directions_bus);}),
     //   ];
     // }
-    _tabController=widget.tabController;
-    if (_tabs!=null&&_tabController==null) {
-      _tabController=TabController(length: _tabs.length,vsync: this);
+    _tabController = widget.tabController;
+    if (_tabs != null && _tabController == null) {
+      _tabController = TabController(length: _tabs.length, vsync: this);
     }
     // _bottoms=widget.bottoms;
     // if (_bottoms==null){
@@ -105,17 +106,18 @@ class _AppAlipayState extends State<AppAlipay> with TickerProviderStateMixin{
     //   ];
     // }
   }
+
   @override
   Widget build(BuildContext context) {
-   return BasicApp(titleWidgets:_titleWidgets,title: widget.title,
-    tabs: _tabs,tabController: _tabController,
-    actions: _actions,
-    leading:_leading,
-    drawer: _drawer,
-    body: HomePage(),
+    return BasicApp(
+      titleWidgets: _titleWidgets,
+      title: widget.title,
+      tabs: _tabs,
+      tabController: _tabController,
+      actions: _actions,
+      leading: _leading,
+      drawer: _drawer,
+      body: HomePage(),
     );
   }
-  
 }
-
-

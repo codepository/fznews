@@ -6,35 +6,35 @@ import 'package:fznews/user/roles_widget.dart';
 import 'package:fznews/user/users_list.dart';
 import 'package:fznews/widget/app/app_basic.dart';
 
-class UsersWidget extends StatefulWidget{
-  final Map<String,dynamic> params;
-  UsersWidget({Key key,this.params}):super(key:key);
-
+class UsersWidget extends StatefulWidget {
+  final Map<String, dynamic> params;
+  UsersWidget({Key key, this.params}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _UsersWidgetState();
   }
-
-  
 }
-class _UsersWidgetState extends State<UsersWidget> with TickerProviderStateMixin{
+
+class _UsersWidgetState extends State<UsersWidget> with TickerProviderStateMixin {
   TabController tabController;
   List<RouteHandler> choices;
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    choices=<RouteHandler>[
-      RouteHandler(title: '用户',icon: Icons.people,handler: ({Map<String,dynamic> params})=>UsersList()),
-      RouteHandler(title: '角色',icon: Icons.face,handler: ({Map<String,dynamic> params})=>RolesWidget()),
-      RouteHandler(title: '部门',icon: Icons.group,handler:({Map<String,dynamic> params})=>DepartmentWidget()),
+    choices = <RouteHandler>[
+      RouteHandler(title: '用户', icon: Icons.people, handler: ({Map<String, dynamic> params}) => UsersList()),
+      RouteHandler(title: '角色', icon: Icons.face, handler: ({Map<String, dynamic> params}) => RolesWidget()),
+      RouteHandler(title: '部门', icon: Icons.group, handler: ({Map<String, dynamic> params}) => DepartmentWidget()),
     ];
-    tabController=TabController(length: choices.length,vsync: this);
+    tabController = TabController(length: choices.length, vsync: this);
   }
+
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     tabController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return BasicApp(
@@ -43,9 +43,8 @@ class _UsersWidgetState extends State<UsersWidget> with TickerProviderStateMixin
       tabs: choices,
       leading: IconButton(
         icon: Icon(Icons.home),
-        onPressed: ()=>App.router.navigateTo(context,Routes.Dashboard),
+        onPressed: () => App.router.navigateTo(context, Routes.Dashboard),
       ),
     );
   }
-
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class IconButtonCountDown extends StatefulWidget{
+class IconButtonCountDown extends StatefulWidget {
   final int seconds;
   final onPressed;
   // icon 可以为Text
@@ -12,60 +12,75 @@ class IconButtonCountDown extends StatefulWidget{
   final double elevation;
   final Color color;
   final String tooltip;
-  IconButtonCountDown({Key key,this.seconds,this.onPressed,this.icon,
-    this.color,this.iconSize,this.tooltip,
-    this.width,this.elevation}):super(key:key);
+  IconButtonCountDown(
+      {Key key,
+      this.seconds,
+      this.onPressed,
+      this.icon,
+      this.color,
+      this.iconSize,
+      this.tooltip,
+      this.width,
+      this.elevation})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _IconButtonCountDownState();
   }
-
 }
-class _IconButtonCountDownState extends State<IconButtonCountDown>{
+
+class _IconButtonCountDownState extends State<IconButtonCountDown> {
   int _seconds;
   Timer _timer;
   Widget _icon;
-  bool pressed;
+  bool pressed = false;
   Function _onPressed;
 
-  @override void initState(){
+  @override
+  void initState() {
     super.initState();
-    _icon=widget.icon;
-    if (_icon==null) Text("确定");
+    _icon = widget.icon;
+    if (_icon == null) Text("确定");
     setSeconds();
-    _onPressed=widget.onPressed;
+    _onPressed = widget.onPressed;
   }
-  @override void dispose(){
+
+  @override
+  void dispose() {
     _cancelTimer();
     super.dispose();
   }
-  void setSeconds(){
-    _seconds=widget.seconds;
-    if (_seconds==null) _seconds=3;
+
+  void setSeconds() {
+    _seconds = widget.seconds;
+    if (_seconds == null) _seconds = 3;
   }
-  Function onPressed(){
-    print("ButtonCountDown onPressed");
-    return (){
-      if (_timer!=null)return;
+
+  Function onPressed() {
+    if (pressed) {
+      return () {};
+    }
+    return () {
+      if (_timer != null) return;
       _startTimer();
       widget.onPressed?.call();
     }();
   }
-  void _startTimer(){
-    // print("ButtonCountDown _startTimer");
-    _onPressed=null;
-    pressed=true;
+
+  void _startTimer() {
+    _onPressed = null;
+    pressed = true;
     setState(() {});
-    _timer=Timer.periodic(Duration(seconds: 1),(timer){
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       // print(_seconds.toString());
-      // _icon=Text(_seconds.toString());
-      if (_seconds<=0){
-        pressed=false;
+      _icon = Icon(Icons.cancel);
+      if (_seconds <= 0) {
+        pressed = false;
         _cancelTimer();
-        _onPressed=widget.onPressed;
+        _onPressed = widget.onPressed;
         setSeconds();
-        _icon=widget.icon;
-        if (_icon==null){
+        _icon = widget.icon;
+        if (_icon == null) {
           // _icon=Text('确定');
         }
         setState(() {});
@@ -74,22 +89,22 @@ class _IconButtonCountDownState extends State<IconButtonCountDown>{
       setState(() {});
       _seconds--;
     });
-    
   }
-  void _cancelTimer(){
+
+  void _cancelTimer() {
     _timer?.cancel();
-    _timer=null;
+    _timer = null;
   }
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: widget.icon,
-        color: widget.color,
-        iconSize:widget.iconSize,
-        disabledColor: Colors.grey,
-        tooltip: widget.tooltip,
-        onPressed: onPressed,
+      icon: _icon,
+      color: widget.color,
+      iconSize: widget.iconSize ?? 24,
+      disabledColor: Colors.grey,
+      tooltip: widget.tooltip,
+      onPressed: onPressed,
     );
   }
-  
 }

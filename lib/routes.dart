@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fznews/app.dart';
+import 'package:fznews/home_page.dart';
 import 'package:fznews/search.dart';
 import 'package:fznews/tongji/editor_detail.dart';
 import 'package:fznews/tongji/tongji.dart';
@@ -90,6 +91,7 @@ class Routes {
   static List<RouteHandler> homePageTabs = <RouteHandler>[
     RouteHandler(
         title: '流量',
+        subTitle: "流量",
         icon: Icons.scanner,
         handler: ({Map<String, dynamic> params}) {
           return ChoiceCard(title: 'Car', icon: Icons.directions_car);
@@ -130,25 +132,24 @@ class Routes {
   }
 
   static void setRouters() {
-    print('初始化：设置路由');
     routers = <RouteHandler>[
       RouteHandler(
         title: "首页",
+        subTitle: "首页展示月度考核情况",
+        titleColor: Colors.white,
+        subTitleColor: Colors.white,
+        backgroundColor: Colors.blue,
         icon: Icons.home,
-        handler: ({Map<String, dynamic> params}) => XueXiApp(
-          params: params,
-          title: XueXiTitle(
-            username: App.userinfos.user?.name,
-            avatar: App.userinfos.user?.avatar,
-          ),
-          tabs: homePageTabs,
-          leading: Icon(Icons.home),
-        ),
+        handler: ({Map<String, dynamic> params}) => HomePage(),
         route: Routes.Home,
         meta: RouteMeta(needsBottomRegistry: true, needsDrawerRegistry: false, needsRoutesRegistry: true),
       ),
       RouteHandler(
         title: "用户",
+        subTitle: "用户信息维护",
+        titleColor: Colors.white,
+        subTitleColor: Colors.white,
+        backgroundColor: Colors.pinkAccent,
         icon: Icons.people,
         handler: ({Map<String, dynamic> params}) => UsersWidget(params: params),
         route: Routes.Users,
@@ -156,6 +157,10 @@ class Routes {
       ),
       RouteHandler(
         title: "流量",
+        subTitle: "显示每个编辑的文章获取的流量",
+        titleColor: Colors.grey[850],
+        subTitleColor: Colors.grey[850],
+        backgroundColor: Colors.grey[50],
         icon: Icons.settings_input_component,
         handler: ({Map<String, dynamic> params}) => TongjiWidget(params: params),
         route: Routes.Tongji,
@@ -192,9 +197,6 @@ class Routes {
         route: Routes.Userinfo,
       ),
       RouteHandler(
-          handler: ({Map<String, dynamic> params}) => QuantitativeScoringPage(params: params),
-          route: Routes.QuantitativeScroing),
-      RouteHandler(
           handler: ({Map<String, dynamic> params}) => EditorDetail(params: params), route: Routes.Editor_Detail),
       RouteHandler(handler: ({Map<String, dynamic> params}) => SearchPage(params: params), route: Routes.Search),
       RouteHandler(
@@ -214,8 +216,21 @@ class RouteHandler {
   String route;
   IconData icon;
   String title;
+  String subTitle;
   RouteMeta meta;
-  RouteHandler({this.handler, this.icon, this.title, this.route, this.meta});
+  Color titleColor;
+  Color subTitleColor;
+  Color backgroundColor;
+  RouteHandler(
+      {this.handler,
+      this.icon,
+      this.title = "",
+      this.subTitle = "",
+      this.titleColor,
+      this.subTitleColor,
+      this.backgroundColor,
+      this.route,
+      this.meta});
 }
 
 class RouteMeta {

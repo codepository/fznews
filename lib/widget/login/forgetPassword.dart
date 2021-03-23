@@ -1,45 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:fznews/widget/button/button_countdown.dart';
+import 'package:fznews/widget/button_countdown.dart';
 import 'package:fznews/widget/textfield/normal.dart';
 
-class ForgetPasswordWidget extends StatefulWidget{
-
+class ForgetPasswordWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _ForgetPasswordWidgetState();
   }
-
 }
-class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget>{
+
+class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget> {
   TextEditingController _accountTEC;
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _accountTEC=TextEditingController();
+    _accountTEC = TextEditingController();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        body: Container(
+      body: Container(
         height: double.infinity,
-        alignment: Alignment(0,0),
+        alignment: Alignment(0, 0),
         child: Container(
           width: 300,
           height: 400,
           child: Column(
-          children: <Widget>[
+            children: <Widget>[
               Container(
-                alignment: Alignment(-1,-1),   
-                child: Container(  
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      shape: BoxShape.circle
-                    ),
-                    child: IconButton(
+                alignment: Alignment(-1, -1),
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                  child: IconButton(
                     color: Colors.yellow,
-                    icon: Icon(Icons.arrow_back,size: 30,),
-                    onPressed: (){
+                    icon: Icon(
+                      Icons.arrow_back,
+                      size: 30,
+                    ),
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
@@ -49,13 +48,13 @@ class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget>{
                 height: 5,
               ),
               Container(
-                alignment: Alignment(-1,-1),
+                alignment: Alignment(-1, -1),
                 child: Container(
                   child: Text(
-                    '找回密码',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
+                    '找回密码',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                   ),
                 ),
-
               ),
               SizedBox(
                 height: 10,
@@ -69,9 +68,8 @@ class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget>{
                 width: double.infinity,
                 // elevation: 0,
                 seconds: 5,
-                callback: (){
+                onPressed: () {
                   // 发送邮件
-                  
                 },
               ),
             ],
@@ -80,5 +78,4 @@ class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget>{
       ),
     );
   }
-  
 }

@@ -20,12 +20,14 @@ dependencies:
   flutter:
     sdk: flutter
   provider:
-  fl_chart:
-  flutter_echarts:
   fluro: ^1.6.0
   cached_network_image:
   shared_preferences:
   url_launcher:
+  charts_flutter:
+  rxdart:
+  popup_menu:
+
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -17,7 +17,7 @@ class TongjiAPI {
   }
 
   static Future<dynamic> download(dynamic body) {
-    return App.request.download(API.tongjiBase + "/exportData", jsonEncode(body));
+    return App.request.download(API.tongjiBase + "/exportData", body: jsonEncode(body));
   }
 }
 

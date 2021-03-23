@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+
 class ScreenUtils {
   double _screenWidth = 0.0;
   double _screenHeight = 0.0;
@@ -11,13 +12,15 @@ class ScreenUtils {
     _singleton._init();
     return _singleton;
   }
-   _init() {
+
+  _init() {
     MediaQueryData mediaQuery = MediaQueryData.fromWindow(ui.window);
     if (_mediaQueryData != mediaQuery) {
       _mediaQueryData = mediaQuery;
     }
   }
-    /// screen width
+
+  /// screen width
   /// 屏幕 宽
   double get screenWidth => _screenWidth;
 
@@ -25,7 +28,7 @@ class ScreenUtils {
   /// 屏幕 高
   double get screenHeight => _screenHeight;
 
-    /// screen width
+  /// screen width
   /// 当前屏幕 宽
   static double screenW(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -38,10 +41,12 @@ class ScreenUtils {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return mediaQuery.size.height;
   }
+
   // 获取sliver grid元素宽高比
-  static double getChildAspectRatio(double fixedHeight,double currentWidth){
-    return currentWidth/fixedHeight;
+  static double getChildAspectRatio(double fixedHeight, double currentWidth) {
+    return currentWidth / fixedHeight;
   }
+
   static bool isSmallScreen(BuildContext context) {
     return MediaQuery.of(context).size.width < 800;
   }
@@ -51,7 +56,11 @@ class ScreenUtils {
   }
 
   static bool isMediumScreen(BuildContext context) {
-    return MediaQuery.of(context).size.width > 800 &&
-        MediaQuery.of(context).size.width < 1200;
+    return MediaQuery.of(context).size.width > 800 && MediaQuery.of(context).size.width < 1200;
+  }
+
+// isXLargeScreen 屏幕宽度是否大于1200
+  static bool isXLargeScreen(BuildContext context) {
+    return MediaQuery.of(context).size.width > 1200;
   }
 }

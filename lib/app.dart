@@ -77,6 +77,23 @@ class App {
     sharedPreferences.setString("token", token);
   }
 
+  static bool isLogin() {
+    return getToken() == null ? false : true;
+  }
+
+  // hasAuthority 验证用户是否有权限
+  static bool hasAuthority(BuildContext context, String label) {
+    if (App.userinfos.user == null) {
+      App.router.navigateTo(context, "/login");
+      return false;
+    }
+    if (App.userinfos.labels.indexWhere((l) => l.labelname.contains(label)) == -1) {
+      App.showAlertError(context, "只有[$label]才能执行该操作");
+      return false;
+    }
+    return true;
+  }
+
   static void showAlertError(BuildContext context, String msg) {
     showAlertDialog(context, Text('错误'), Text(msg));
   }

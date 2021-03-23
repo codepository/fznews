@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-typedef Widget SelectItemBuiler(BuildContext context, Map<dynamic, dynamic> item, bool isSelected);
+typedef Widget SelectItemBuiler(BuildContext context, dynamic item, String isSelected);
 
 abstract class SelectBloc {
   Stream<List> get stream;
@@ -10,7 +10,7 @@ abstract class SelectBloc {
   // 当搜索框中的内容改变时
   void onTextChanged(String filter);
   // 当多选时
-  void onSelected(Map<dynamic, dynamic> selected);
+  void onSelected(dynamic selected);
   // 清除选择
   void onClear();
   // 全选
@@ -27,7 +27,7 @@ class SelectBlocImpl implements SelectBloc {
   final List<dynamic> initValue;
   BehaviorSubject<List> _list$;
   Future<List<dynamic>> Function(String filterStr) getRemoteDataFunc;
-  List<Map<dynamic, dynamic>> selected;
+  List<dynamic> selected;
   // 上次搜索条件
   String lastFilterStr = "";
   // 上次搜索结果
@@ -44,7 +44,7 @@ class SelectBlocImpl implements SelectBloc {
     if (initValue != null) {
       initValue.forEach((val) {
         int index = items.indexWhere((item) => item[valueTag] == val);
-        if (index != -1) items[index]["selected"] = true;
+        if (index != -1) items[index]["selected"] = "true";
       });
     }
     // print("初始化:$initDatas");
@@ -61,7 +61,6 @@ class SelectBlocImpl implements SelectBloc {
 
   @override
   set(List items) {
-    // print("设置值：$items");
     if (items == null) return;
     _list$.add(items);
     lastList = items;
@@ -103,12 +102,12 @@ class SelectBlocImpl implements SelectBloc {
   }
 
   @override
-  void onSelected(Map<dynamic, dynamic> item) {
+  void onSelected(dynamic item) {
     item["selected"] = !item["selected"];
     var index = lastList.indexWhere((d) => d[valueTag] == item[valueTag]);
     lastList[index] = item;
     _list$.add(lastList);
-    if (item["selected"]) {
+    if (item["selected"] || item["selected"] == "true") {
       selected.add(item);
     } else {
       selected.removeWhere((s) => s[valueTag] == item[valueTag]);
@@ -117,14 +116,14 @@ class SelectBlocImpl implements SelectBloc {
 
   @override
   void onClear() {
-    lastList.forEach((l) => l["selected"] = false);
+    lastList.forEach((l) => l["selected"] = "false");
     _list$.add(lastList);
     selected = List();
   }
 
   @override
   void onSelectAll() {
-    lastList.forEach((l) => l["selected"] = true);
+    lastList.forEach((l) => l["selected"] = "true");
     _list$.add(lastList);
     selected = lastList;
   }
@@ -188,7 +187,7 @@ class _SelectState extends State<Select> {
     super.initState();
     textEditingController = widget.textEditingController ?? TextEditingController();
     if (widget.initValue != null && widget.items != null) {
-      textEditingController.text = "${widget.initValue.join(",")}";
+      textEditingController.text = "${widget.initValue.join(",") ?? ""}";
     }
     bloc = SelectBlocImpl(
         initValue: widget.initValue,
@@ -220,7 +219,7 @@ class _SelectState extends State<Select> {
           onChange: (val) {
             // print("selected val:$val");
             if (!widget.multiple) {
-              textEditingController.text = "${val[bloc.valueTag]}";
+              textEditingController.text = "${val[bloc.valueTag] ?? ""}";
               widget.onChange?.call(val[bloc.keyTag], val[bloc.valueTag]);
             } else {
               // print("SelectDialog onchange");
@@ -322,12 +321,11 @@ class SelectDialog extends StatelessWidget {
   }
 
   SelectItemBuiler get itemBuilder => (context, item, isSelected) {
-        // print("select item:$item");
         return Container(
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey, width: 1))),
           child: ListTile(
             title: Text("${item[bloc.valueTag]}"),
-            selected: isSelected,
+            selected: isSelected == "true" ? true : false,
             trailing: Icon(Icons.done_outline),
           ),
         );
@@ -354,7 +352,6 @@ class SelectDialog extends StatelessWidget {
             child: StreamBuilder<List<dynamic>>(
               stream: bloc.stream,
               builder: (context, snapshot) {
-                // print("data:${snapshot.data}");
                 if (!snapshot.hasData) {
                   return Center(
                     child: CircularProgressIndicator(),
@@ -368,18 +365,16 @@ class SelectDialog extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      Map<dynamic, dynamic> item = snapshot.data[index];
-                      // print("select build:$item");
-                      // if (item["selected"] == null) item["selected"] = false;
+                      dynamic item = snapshot.data[index];
+                      if (item["selected"] == null) item["selected"] = "false";
                       return InkWell(
-                          child: itemBuilder(context, item, item["selected"] ?? false),
+                          child: itemBuilder(context, item, item["selected"]),
                           onTap: () {
                             if (!multiple) {
                               onChange.call(item);
                               Navigator.pop(context);
                             } else {
                               bloc.onSelected(item);
-
                               onChange.call(bloc.selected);
                             }
                           });
